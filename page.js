@@ -1,6 +1,14 @@
-import { createClient } from '@supabase/supabase-js'
+'use client'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabaseClient'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export default function Home() {
+  const router = useRouter()
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      router.replace(data.session ? '/dashboard' : '/login')
+    })
+  }, [router])
+  return null
+}
